@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -233,26 +234,36 @@ func (c *AVTransportController) sendSOAPActionWithResponse(controlURL, soapActio
 // getAVTransportControlURL extracts the AVTransport control URL from the device
 func (c *AVTransportController) getAVTransportControlURL(device *DLNADevice) string {
 	if device.Location == "" {
+		log.Printf("[AVTransport] Device %s has no Location", device.UUID)
 		return ""
 	}
+
+	log.Printf("[AVTransport] Fetching device description from %s", device.Location)
 
 	// Fetch device description
 	resp, err := c.httpClient.Get(device.Location)
 	if err != nil {
+		log.Printf("[AVTransport] Failed to fetch device description: %v", err)
 		return ""
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		log.Printf("[AVTransport] Failed to read device description: %v", err)
 		return ""
 	}
+
+	log.Printf("[AVTransport] Got device description (%d bytes)", len(body))
 
 	// Parse XML to find AVTransport control URL
 	controlURL := c.extractControlURL(string(body), "AVTransport")
 	if controlURL == "" {
+		log.Printf("[AVTransport] No AVTransport service found in XML")
 		return ""
 	}
+
+	log.Printf("[AVTransport] Found control URL: %s", controlURL)
 
 	// Make the URL absolute if it's relative
 	baseURL := device.Location
