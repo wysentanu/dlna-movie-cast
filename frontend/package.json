@@ -1,0 +1,18 @@
+{
+  "name": "dlna-movie-cast",
+  "version": "1.0.0",
+  "description": "DLNA Movie Cast Frontend",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wysentanu/dlna-movie-cast"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

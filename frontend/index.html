@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DLNA Movie Cast - Stream movies to your TV">
+    <title>DLNA Movie Cast</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+                        <polyline points="17 2 12 7 7 2" />
+                    </svg>
+                    <span class="logo-text">DLNA Movie Cast</span>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-view="library">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                        </svg>
+                        Library
+                    </button>
+                    <button class="nav-btn" data-view="devices">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+                            <polyline points="17 2 12 7 7 2" />
+                        </svg>
+                        Devices
+                    </button>
+                </nav>
+                <div class="header-actions">
+                    <button class="icon-btn" id="scanBtn" title="Scan Library">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 11-9-9" />
+                            <path d="M21 3v6h-6" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Library View -->
+            <section id="libraryView" class="view active">
+                <div class="view-header">
+                    <h1>Movie Library</h1>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search movies...">
+                    </div>
+                </div>
+                <div class="movie-grid" id="movieGrid">
+                    <!-- Movies will be loaded here -->
+                </div>
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M15.5 13.5L20 18" />
+                        <circle cx="11" cy="11" r="8" />
+                    </svg>
+                    <h3>No movies found</h3>
+                    <p>Add movies to your media folder and scan the library</p>
+                </div>
+            </section>
+
+            <!-- Devices View -->
+            <section id="devicesView" class="view">
+                <div class="view-header">
+                    <h1>DLNA Devices</h1>
+                    <button class="btn btn-secondary" id="refreshDevicesBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12a9 9 0 11-9-9" />
+                            <path d="M21 3v6h-6" />
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+                <div class="device-list" id="deviceList">
+                    <!-- Devices will be loaded here -->
+                </div>
+                <div class="empty-state" id="noDevices" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+                        <polyline points="17 2 12 7 7 2" />
+                    </svg>
+                    <h3>No devices found</h3>
+                    <p>Make sure your TV is on and connected to the same network</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Movie Detail Modal -->
+        <div class="modal" id="movieModal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <button class="modal-close" id="closeModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="movie-detail" id="movieDetail">
+                    <!-- Movie details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Now Playing Bar -->
+        <div class="now-playing" id="nowPlaying" style="display: none;">
+            <div class="now-playing-content">
+                <div class="now-playing-info">
+                    <span class="now-playing-title" id="npTitle">Movie Title</span>
+                    <span class="now-playing-device" id="npDevice">Playing on TV</span>
+                </div>
+                <div class="now-playing-controls">
+                    <button class="control-btn" id="playPauseBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16" />
+                            <rect x="14" y="4" width="4" height="16" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="stopBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="4" y="4" width="16" height="16" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="now-playing-progress">
+                    <input type="range" id="progressBar" min="0" max="100" value="0">
+                    <span class="time-display" id="timeDisplay">0:00:00 / 0:00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

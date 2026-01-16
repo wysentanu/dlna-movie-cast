@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+*.exe
+*.dll
+*.so
+*.dylib
+server
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Go
+*.test
+*.out
+coverage.txt
+coverage.html
+
+# Frontend
+.cache/
+*.local
+
+# Database and data files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+data/
+
+# Thumbnails and generated media
+thumbnails/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Logs
+*.log
+logs/
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Agent artifacts
+.gemini/
+
+# HLS temporary files (usually in /tmp but just in case)
+.dlna-transcoder/

@@ -1,0 +1,67 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dlna-movie-cast-backend
+    restart: unless-stopped
+    ports:
+      # Backend direct access (required for DLNA/UPnP discovery to report correct port)
+      - "8080:8080"
+      - "1900:1900/udp"
+    
+    # Host networking is highly recommended for DLNA/UPnP
+    # network_mode: host
+
+    volumes:
+      - ${MEDIA_PATH:-./media}:/media:ro
+      - ./data:/data
+      - type: tmpfs
+        target: /tmp/dlna-movie-cast-hls
+        tmpfs:
+          size: 512M
+
+    environment:
+      - TZ=UTC
+      - MEDIA_PATH=/media
+      - DB_PATH=/data/library.db
+      - SERVER_PORT=8080
+
+    # -------------------------------------------------------------------------
+    # Hardware Acceleration Configuration (Uncomment for your platform)
+    # -------------------------------------------------------------------------
+    
+    # Option 1: Rockchip RK3566/RK3588 (Orange Pi, Rock Pi)
+    # devices:
+    #   - /dev/mpp_service:/dev/mpp_service
+    #   - /dev/rga:/dev/rga
+    #   - /dev/dri:/dev/dri
+    # security_opt:
+    #   - apparmor:unconfined
+
+    # Option 2: Intel/AMD (VAAPI)
+    # devices:
+    #   - /dev/dri:/dev/dri
+    
+    # Option 3: NVIDIA (NVENC)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu, video]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dlna-movie-cast-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  data:
