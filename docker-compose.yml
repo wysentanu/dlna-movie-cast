@@ -5,13 +5,12 @@ services:
       dockerfile: Dockerfile
     container_name: dlna-movie-cast-backend
     restart: unless-stopped
-    ports:
-      # Backend direct access (required for DLNA/UPnP discovery to report correct port)
-      - "8080:8080"
-      - "1900:1900/udp"
     
-    # Host networking is highly recommended for DLNA/UPnP
-    # network_mode: host
+    # Host networking required for DLNA/UPnP to reach LAN devices
+    network_mode: host
+    
+    # Note: ports are ignored when using network_mode: host
+    # The server listens on SERVER_PORT (default 8080)
 
     volumes:
       - ${MEDIA_PATH:-./media}:/media:ro
