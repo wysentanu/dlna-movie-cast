@@ -26,16 +26,14 @@ services:
       - SERVER_PORT=8080
 
     # -------------------------------------------------------------------------
-    # Hardware Acceleration Configuration (Uncomment for your platform)
+    # Hardware Acceleration Configuration - Rockchip enabled
     # -------------------------------------------------------------------------
-
-    # Option 1: Rockchip RK3566/RK3588 (Orange Pi, Rock Pi)
-    # devices:
-    #   - /dev/mpp_service:/dev/mpp_service
-    #   - /dev/rga:/dev/rga
-    #   - /dev/dri:/dev/dri
-    # security_opt:
-    #   - apparmor:unconfined
+    devices:
+      - /dev/mpp_service:/dev/mpp_service
+      - /dev/rga:/dev/rga
+      - /dev/dri:/dev/dri
+    security_opt:
+      - apparmor:unconfined
 
     # Option 2: Intel/AMD (VAAPI)
     # devices:
