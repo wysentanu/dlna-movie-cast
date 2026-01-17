@@ -26,21 +26,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Jellyfin FFmpeg (has rkmpp support for Rockchip)
+# Install Jellyfin FFmpeg 7 portable (has rkmpp support for Rockchip)
 RUN curl -L -o /tmp/ffmpeg.tar.xz \
-    "https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v6.0.1-8/jellyfin-ffmpeg6_6.0.1-8-bookworm_arm64.tar.xz" \
-    && mkdir -p /usr/lib/jellyfin-ffmpeg \
-    && tar -xf /tmp/ffmpeg.tar.xz -C /usr/lib/jellyfin-ffmpeg \
-    && ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg \
-    && ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe \
+    "https://github.com/jellyfin/jellyfin-ffmpeg/releases/download/v7.1.3-1/jellyfin-ffmpeg_7.1.3-1_portable_linuxarm64-gpl.tar.xz" \
+    && mkdir -p /opt/jellyfin-ffmpeg \
+    && tar -xf /tmp/ffmpeg.tar.xz -C /opt/jellyfin-ffmpeg --strip-components=1 \
+    && ln -s /opt/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg \
+    && ln -s /opt/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe \
     && rm /tmp/ffmpeg.tar.xz
-
-# Install Rockchip MPP library (required for rkmpp)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    librockchip-mpp1 \
-    librockchip-vpu0 \
-    || true \
-    && rm -rf /var/lib/apt/lists/*
 
 # Create necessary directories
 RUN mkdir -p /media /data /tmp/dlna-movie-cast-hls

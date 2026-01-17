@@ -1,3 +1,6 @@
+> [!WARNING]
+> **Experimental Phase**: This project is currently under active development. Features may be unstable, and significant changes to the architecture or configuration may occur without notice.
+
 # DLNA Movie Cast
 
 A lightweight media server that streams movies to DLNA devices (like smart TVs) with on-the-fly transcoding and subtitle burning support.
