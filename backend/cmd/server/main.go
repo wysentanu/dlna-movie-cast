@@ -113,18 +113,53 @@ func main() {
 }
 
 // getLocalIP returns the local IP address
+// Prefers 192.168.x.x addresses, then 10.x.x.x, then any private IP
+// Can be overridden with SERVER_IP environment variable
 func getLocalIP() string {
+	// Allow manual override via environment variable
+	if envIP := os.Getenv("SERVER_IP"); envIP != "" {
+		return envIP
+	}
+
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return "127.0.0.1"
 	}
 
+	var candidates []string
 	for _, addr := range addrs {
 		if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-			if ipnet.IP.To4() != nil {
-				return ipnet.IP.String()
+			if ip4 := ipnet.IP.To4(); ip4 != nil {
+				ipStr := ip4.String()
+				candidates = append(candidates, ipStr)
 			}
 		}
+	}
+
+	// Prefer 192.168.x.x (most common home LAN)
+	for _, ip := range candidates {
+		if len(ip) > 8 && ip[:8] == "192.168." {
+			return ip
+		}
+	}
+
+	// Then prefer 10.x.x.x
+	for _, ip := range candidates {
+		if len(ip) > 3 && ip[:3] == "10." {
+			return ip
+		}
+	}
+
+	// Then prefer 172.16-31.x.x
+	for _, ip := range candidates {
+		if len(ip) > 4 && ip[:4] == "172." {
+			return ip
+		}
+	}
+
+	// Return first candidate or fallback
+	if len(candidates) > 0 {
+		return candidates[0]
 	}
 
 	return "127.0.0.1"
